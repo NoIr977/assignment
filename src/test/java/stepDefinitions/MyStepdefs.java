@@ -4,6 +4,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -15,18 +17,27 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MyStepdefs {
     static WebDriver driver;
-    @Given("the user navigates to the registration page")
-    public void theUserNavigatesToTheRegistrationPage() {
+    @Before
+    public void setUp() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--incognito");
-
         driver = new ChromeDriver(options);
         driver.manage().deleteAllCookies();
+    }
+
+    @After
+    public void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Given("the user navigates to the registration page")
+    public void theUserNavigatesToTheRegistrationPage() {
         driver.get("https://membership.basketballengland.co.uk/NewSupporterAccount");
     }
 
@@ -48,9 +59,15 @@ public class MyStepdefs {
         lastName.sendKeys("Mouse");
     }
 
+    @And("the user leaves the last name field empty")
+    public void theUserLeavesTheLastNameFieldEmpty() {
+        WebElement lastName = driver.findElement(By.id("member_lastname"));
+        lastName.clear();
+    }
+
     @And("the user enters their email address and confirms it with the same email address")
     public void theUserEntersTheirEmailAddressAndConfirmsItWithTheSameEmailAddress() {
-        String expectedEmail = "mickey.nikulita@hotmail.se";
+        String expectedEmail = "mickey.mousik@hotmail.se";
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         WebElement eMail = wait.until(ExpectedConditions.elementToBeClickable(By.id("member_emailaddress")));
@@ -95,6 +112,26 @@ public class MyStepdefs {
         assertEquals("Password is not as expected", expectedPassword, enteredPassword);
     }
 
+    @And("the user enters a password and confirms it with the different password")
+    public void theUserEntersAPasswordAndConfirmsItWithTheDifferentPassword() {
+
+        WebElement password = driver.findElement(By.id("signupunlicenced_password"));
+        password.sendKeys("SecurePass123");
+
+        WebElement retypePassword = driver.findElement(By.id("signupunlicenced_confirmpassword"));
+        retypePassword.sendKeys("SecurePass!!!");
+
+        String enteredPassword = password.getAttribute("value");
+        String retypedPassword = retypePassword.getAttribute("value");
+
+        String expectedPassword = "SecurePass123";
+        assertEquals("Password is not as expected", expectedPassword, enteredPassword);
+
+
+        assertNotEquals("Passwords should not match", enteredPassword, retypedPassword);
+    }
+
+
     @And("the user submits the account confirmation")
     public void theUserSubmitsTheAccountConfirmation() {
 
@@ -119,11 +156,51 @@ public class MyStepdefs {
         iAgree.click();
 
     }
+    @And("the user does not submit the registration form")
+    public void theUserDoesNotSubmitTheRegistrationForm() {
+        WebElement confirmButton = driver.findElement(By.cssSelector("input[type='submit']"));
+        confirmButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+
+        WebElement agreementCheck = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div/div/div/div/div/form/div[11]/div/div[7]/label/span[3]"));
+        boolean isChecked = agreementCheck.isSelected();
+
+        try { Thread.sleep(1500); } catch (InterruptedException e) {}
+        System.out.println("Agreement must be selected" + isChecked);
+
+        assertFalse("Agreement checkbox should not be selected ",isChecked);
+    }
+
+    @Then("the form is not submitted")
+    public void theFormIsNotSubmitted() {
+
+        WebElement confirmButton = driver.findElement(By.cssSelector("input[type='submit']"));
+        confirmButton.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement check = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("member_lastname")));
+
+        assertTrue("Surname field should be filled: ", check.isDisplayed());
+
+        try { Thread.sleep(1500); } catch (InterruptedException e) {}
+    }
+
 
     @Then("a new user account should be created successfully")
     public void aNewUserAccountShouldBeCreatedSuccessfully() {
         WebElement confirmButton = driver.findElement(By.cssSelector("input[type='submit']"));
         confirmButton.click();
+
+    }
+    @Then("the user sees an error message indicating that the passwords do not match")
+    public void theUserSeesAnErrorMessageIndicatingThatThePasswordsDoNotMatch() {
+
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        WebElement check = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("signupunlicenced_password")));
+
+        try { Thread.sleep(1500); } catch (InterruptedException e) {}
+        assertTrue("Password is not as expected: ", check.isDisplayed());
 
     }
 
@@ -141,8 +218,16 @@ public class MyStepdefs {
         WebElement locker = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[2]/a"));
         locker.click();
 
-        try { Thread.sleep(700); } catch (InterruptedException e) {}
+        try { Thread.sleep(800); } catch (InterruptedException e) {}
+        driver.quit();
+    }
+
+    @And("the user sees an error message on the last name field")
+    public void theUserSeesAnErrorMessageOnTheLastNameField() {
+        try { Thread.sleep(1500); } catch (InterruptedException e) {}
         driver.quit();
     }
 
 }
+
+
