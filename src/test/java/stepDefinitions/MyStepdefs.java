@@ -165,7 +165,6 @@ public class MyStepdefs {
         boolean isChecked = agreementCheck.isSelected();
 
         try { Thread.sleep(2000); } catch (InterruptedException e) {}
-        System.out.println("Agreement must be selected" + isChecked);
 
         assertFalse("Agreement checkbox should not be selected ",isChecked);
     }
