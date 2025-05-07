@@ -67,7 +67,7 @@ public class MyStepdefs {
 
     @And("the user enters their email address and confirms it with the same email address")
     public void theUserEntersTheirEmailAddressAndConfirmsItWithTheSameEmailAddress() {
-        String expectedEmail = "mickey.mousik@hotmail.se";
+        String expectedEmail = "mickey.mosik@hotmail.se";
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         WebElement eMail = wait.until(ExpectedConditions.elementToBeClickable(By.id("member_emailaddress")));
@@ -161,12 +161,10 @@ public class MyStepdefs {
         WebElement confirmButton = driver.findElement(By.cssSelector("input[type='submit']"));
         confirmButton.click();
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-
         WebElement agreementCheck = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div/div/div/div/div/form/div[11]/div/div[7]/label/span[3]"));
         boolean isChecked = agreementCheck.isSelected();
 
-        try { Thread.sleep(1500); } catch (InterruptedException e) {}
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
         System.out.println("Agreement must be selected" + isChecked);
 
         assertFalse("Agreement checkbox should not be selected ",isChecked);
@@ -199,7 +197,7 @@ public class MyStepdefs {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         WebElement check = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("signupunlicenced_password")));
 
-        try { Thread.sleep(1500); } catch (InterruptedException e) {}
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
         assertTrue("Password is not as expected: ", check.isDisplayed());
 
     }
