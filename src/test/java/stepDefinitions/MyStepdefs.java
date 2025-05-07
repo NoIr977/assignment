@@ -67,7 +67,7 @@ public class MyStepdefs {
 
     @And("the user enters their email address and confirms it with the same email address")
     public void theUserEntersTheirEmailAddressAndConfirmsItWithTheSameEmailAddress() {
-        String expectedEmail = "mickey.mosik@hotmail.se";
+        String expectedEmail = "mickey.mosika@hotmail.se";
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         WebElement eMail = wait.until(ExpectedConditions.elementToBeClickable(By.id("member_emailaddress")));
@@ -215,7 +215,7 @@ public class MyStepdefs {
         WebElement locker = driver.findElement(By.xpath("/html/body/div/div[2]/div/div/div[2]/a"));
         locker.click();
 
-        try { Thread.sleep(800); } catch (InterruptedException e) {}
+        try { Thread.sleep(900); } catch (InterruptedException e) {}
         driver.quit();
     }
 
