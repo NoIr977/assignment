@@ -67,7 +67,7 @@ public class MyStepdefs {
 
     @And("the user enters their email address and confirms it with the same email address")
     public void theUserEntersTheirEmailAddressAndConfirmsItWithTheSameEmailAddress() {
-        String expectedEmail = "mickey.mosikal@hotmail.se";
+        String expectedEmail = "mickey.ricky@hotmail.se";
 
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         WebElement eMail = wait.until(ExpectedConditions.elementToBeClickable(By.id("member_emailaddress")));
